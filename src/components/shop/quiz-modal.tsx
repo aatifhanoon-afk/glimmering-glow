@@ -44,10 +44,11 @@ const steps = [
 ] as const;
 
 function recommend(answers: Record<string, string>): Product[] {
-  const concern = answers.concern;
+  const concern = answers["concern"] ?? "dryness";
   const core = products.filter((p) => p.concerns.includes(concern));
   const picks = [...core];
-  const size = answers.routine === "minimal" ? 2 : answers.routine === "devoted" ? 4 : 3;
+  const routine = answers["routine"];
+  const size = routine === "minimal" ? 2 : routine === "devoted" ? 4 : 3;
   for (const p of products) {
     if (picks.length >= size) break;
     if (!picks.find((x) => x.id === p.id)) picks.push(p);
@@ -60,6 +61,7 @@ export function QuizModal() {
   const [step, setStep] = React.useState(0);
   const [answers, setAnswers] = React.useState<Record<string, string>>({});
   const done = step >= steps.length;
+  const current = steps[Math.min(step, steps.length - 1)]!;
   const picks = done ? recommend(answers) : [];
   const total = picks.reduce((n, p) => n + p.price, 0);
   const bundlePrice = Math.round(total * 0.85);
@@ -72,6 +74,7 @@ export function QuizModal() {
       }, 300);
       return () => clearTimeout(t);
     }
+    return undefined;
   }, [quizOpen]);
 
   return (
@@ -111,15 +114,15 @@ export function QuizModal() {
           >
             {!done ? (
               <div className="space-y-4">
-                <h3 className="font-display text-2xl">{steps[step].question}</h3>
+                <h3 className="font-display text-2xl">{current.question}</h3>
                 <div className="grid gap-2">
-                  {steps[step].options.map((o) => {
-                    const selected = answers[steps[step].key] === o.value;
+                  {current.options.map((o) => {
+                    const selected = answers[current.key] === o.value;
                     return (
                       <button
                         key={o.value}
                         onClick={() => {
-                          setAnswers((a) => ({ ...a, [steps[step].key]: o.value }));
+                          setAnswers((a) => ({ ...a, [current.key]: o.value }));
                           setTimeout(() => setStep((s) => s + 1), 180);
                         }}
                         className={cn(
@@ -189,7 +192,7 @@ export function QuizModal() {
           {!done && (
             <button
               onClick={() => setStep((s) => s + 1)}
-              disabled={!answers[steps[step].key]}
+              disabled={!answers[current.key]}
               className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.18em] disabled:opacity-30"
             >
               Continue <ArrowRight className="size-3.5" aria-hidden />

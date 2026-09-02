@@ -17,7 +17,6 @@ export function SearchDialog() {
   return (
     <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
       <DialogContent
-        showCloseButton={false}
         className="top-24 max-w-2xl translate-y-0 gap-0 overflow-hidden rounded-sm p-0"
       >
         <DialogTitle className="sr-only">Search products</DialogTitle>
