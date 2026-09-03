@@ -61,6 +61,7 @@ export function CheckoutModal() {
             toast.success("Order placed", {
               description: "A confirmation has been sent to your inbox.",
             });
+            clear();
             setCheckoutOpen(false);
             setCartOpen(false);
           }}
