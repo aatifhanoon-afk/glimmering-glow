@@ -14,6 +14,7 @@ type ShopState = {
   add: (p: Product, qty?: number) => void;
   setQty: (id: string, qty: number) => void;
   remove: (id: string) => void;
+  clear: () => void;
   toggleWish: (p: Product) => void;
   setCartOpen: (v: boolean) => void;
   setSearchOpen: (v: boolean) => void;
@@ -64,6 +65,13 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
       toast(has ? `${p.name} removed from wishlist` : `${p.name} saved to wishlist`);
       return has ? w.filter((i) => i !== p.id) : [...w, p.id];
     });
+  }, []);
+
+  const clear = React.useCallback(() => setCart([]), []);
+
+  const setCheckoutOpenSynced = React.useCallback((v: boolean) => {
+    if (v) setCartOpen(false);
+    setCheckoutOpen(v);
   }, []);
 
   const count = cart.reduce((n, l) => n + l.qty, 0);
