@@ -14,6 +14,7 @@ type ShopState = {
   add: (p: Product, qty?: number) => void;
   setQty: (id: string, qty: number) => void;
   remove: (id: string) => void;
+  clear: () => void;
   toggleWish: (p: Product) => void;
   setCartOpen: (v: boolean) => void;
   setSearchOpen: (v: boolean) => void;
@@ -66,6 +67,13 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  const clear = React.useCallback(() => setCart([]), []);
+
+  const setCheckoutOpenSynced = React.useCallback((v: boolean) => {
+    if (v) setCartOpen(false);
+    setCheckoutOpen(v);
+  }, []);
+
   const count = cart.reduce((n, l) => n + l.qty, 0);
   const subtotal = cart.reduce((n, l) => n + l.qty * l.product.price, 0);
 
@@ -79,11 +87,12 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
     add,
     setQty,
     remove,
+    clear,
     toggleWish,
     setCartOpen,
     setSearchOpen,
     setQuizOpen,
-    setCheckoutOpen,
+    setCheckoutOpen: setCheckoutOpenSynced,
     count,
     subtotal,
   };
