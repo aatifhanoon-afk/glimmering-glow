@@ -87,11 +87,12 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
     add,
     setQty,
     remove,
+    clear,
     toggleWish,
     setCartOpen,
     setSearchOpen,
     setQuizOpen,
-    setCheckoutOpen,
+    setCheckoutOpen: setCheckoutOpenSynced,
     count,
     subtotal,
   };
