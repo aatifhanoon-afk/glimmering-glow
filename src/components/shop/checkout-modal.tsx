@@ -11,7 +11,7 @@ import { currency } from "@/lib/shop-data";
 import { toast } from "sonner";
 
 export function CheckoutModal() {
-  const { checkoutOpen, setCheckoutOpen, cart, subtotal, setCartOpen } = useShop();
+  const { checkoutOpen, setCheckoutOpen, cart, subtotal, setCartOpen, clear } = useShop();
   const shipping = subtotal > 0 && subtotal < 150 ? 12 : 0;
 
   return (
